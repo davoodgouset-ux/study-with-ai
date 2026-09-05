@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study with AI — Student Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+
+  <!-- ========================================================================= -->
+  <!-- 1. TOP NAVIGATION BAR -->
+  <!-- ========================================================================= -->
+  <header class="top-nav">
+    <div class="nav-content">
+      <div class="brand">
+        <span class="brand-icon">🎓</span>
+        <span class="brand-title">Study with AI</span>
+      </div>
+
+      <!-- User Auth State Navigation -->
+      <div id="navUserArea" class="nav-user-area">
+        <!-- Shown when logged out -->
+        <div id="navGuestControls" class="guest-controls">
+          <button type="button" class="btn-nav-text" onclick="App.showView('login')">Sign In</button>
+          <button type="button" class="btn-nav-primary" onclick="App.showView('register')">Register</button>
+        </div>
+
+        <!-- Shown when logged in -->
+        <div id="navUserControls" class="user-controls hidden">
+          <span class="user-badge" id="navUserName">👤 Student</span>
+          <button type="button" class="btn-logout" onclick="App.handleLogout()">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN APPLICATION VIEWS -->
+  <!-- ========================================================================= -->
+  <main class="main-container">
+
+    <!-- ======================================================================= -->
+    <!-- VIEW A: LOGIN (SIGN IN) -->
+    <!-- ======================================================================= -->
+    <section id="loginView" class="auth-card">
+      <div class="card-header">
+        <h2>Sign In</h2>
+        <p class="subtitle">Enter your account details to access your study workspace.</p>
+      </div>
+
+      <div id="loginAlert" class="alert-box hidden"></div>
+
+      <form id="loginForm" onsubmit="App.handleLogin(event)">
+        <div class="form-group">
+          <label for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" placeholder="david@study.edu" required autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <div class="password-field">
+            <input type="password" id="loginPassword" placeholder="Enter password" required autocomplete="current-password">
+            <button type="button" class="eye-toggle-btn" id="loginEyeBtn" onclick="App.togglePassword('loginPassword', 'loginEyeBtn')">
+              <svg class="eye-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="loginBtn" class="btn-primary">
+          <span id="loginBtnText">Sign In &rarr;</span>
+        </button>
+      </form>
+
+      <div class="auth-switch">
+        <span>New student?</span>
+        <button type="button" class="btn-link" onclick="App.showView('register')">Create an account</button>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- VIEW B: REGISTER (SIGN UP) -->
+    <!-- ======================================================================= -->
+    <section id="registerView" class="auth-card hidden">
+      <div class="card-header">
+        <h2>Create Account</h2>
+        <p class="subtitle">Sign up to upload study materials and use AI tools.</p>
+      </div>
+
+      <div id="registerAlert" class="alert-box hidden"></div>
+
+      <form id="registerForm" onsubmit="App.handleRegister(event)">
+        <div class="form-group">
+          <label for="regName">Full Name</label>
+          <input type="text" id="regName" placeholder="David Gouse" required autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label for="regEmail">Student Email</label>
+          <input type="email" id="regEmail" placeholder="david@study.edu" required autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label for="regPassword">Password (Min 6 characters)</label>
+          <div class="password-field">
+            <input type="password" id="regPassword" placeholder="Choose password" required minlength="6" autocomplete="new-password">
+            <button type="button" class="eye-toggle-btn" id="regEyeBtn" onclick="App.togglePassword('regPassword', 'regEyeBtn')">
+              <svg class="eye-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="regBtn" class="btn-primary">
+          <span id="regBtnText">Create Account &rarr;</span>
+        </button>
+      </form>
+
+      <div class="auth-switch">
+        <span>Already have an account?</span>
+        <button type="button" class="btn-link" onclick="App.showView('login')">Sign in here</button>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- VIEW C: MAIN STUDY WORKSPACE (ONLY FOR AUTHORIZED/LOGGED IN USERS) -->
+    <!-- ======================================================================= -->
+    <section id="workspaceView" class="workspace-layout hidden">
+      
+      <!-- LEFT COLUMN: DOCUMENT & STUDY MATERIAL MANAGER -->
+      <aside class="workspace-sidebar">
+        <div class="panel-box">
+          <h3 class="panel-heading">1. Study Materials (PDF)</h3>
+          <p class="panel-desc">Upload textbooks or select an existing document.</p>
+
+          <!-- Document Alert Box -->
+          <div id="docAlert" class="alert-box hidden"></div>
+
+          <!-- Upload PDF Section -->
+          <div class="upload-action-box">
+            <label class="form-label">Upload New PDF (Max 25MB)</label>
+            <input type="file" id="pdfFileInput" accept=".pdf" class="file-input-field">
+            <button type="button" id="btnUploadPdf" class="btn-action btn-upload" onclick="DocApp.uploadDocument()">
+              <span id="uploadBtnText">⬆️ Upload Document</span>
+            </button>
+          </div>
+
+          <hr class="divider">
+
+          <!-- Select Existing Document Section -->
+          <div class="doc-select-box">
+            <label for="documentSelect" class="form-label">Select Active Textbook</label>
+            <select id="documentSelect" class="doc-dropdown" onchange="DocApp.handleDocumentSelect(event)">
+              <option value="">Loading documents...</option>
+            </select>
+          </div>
+
+          <!-- Document Action Buttons -->
+          <div class="doc-actions-row">
+            <button type="button" id="btnViewPdf" class="btn-secondary" onclick="DocApp.viewDocument()" title="View original PDF in browser">
+              👁️ View PDF
+            </button>
+            <button type="button" id="btnDeletePdf" class="btn-danger" onclick="DocApp.deleteDocument()" title="Delete document and its vector index">
+              🗑️ Delete
+            </button>
+          </div>
+
+          <!-- Document Status Info -->
+          <div class="doc-info-card" id="activeDocInfo">
+            <span class="info-label">Active Document:</span>
+            <strong id="activeDocName" class="info-val">No document selected</strong>
+            <span id="activeDocMeta" class="info-meta" style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">—</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN: AI STUDY TOOLS & CONTENT DISPLAY -->
+      <main class="workspace-content">
+        <div class="panel-box">
+          <h3 class="panel-heading">2. AI Study Tools</h3>
+          <p class="panel-desc">Choose which AI operation to run on your selected document.</p>
+
+          <!-- AI Action Buttons Toolbar (Exactly matching Backend Endpoints) -->
+          <div class="ai-tools-toolbar">
+            <button type="button" class="tool-tab-btn active" id="tabAskBtn" onclick="App.switchTool('ask')">
+              💬 Ask AI (RAG Q&A)
+            </button>
+            <button type="button" class="tool-tab-btn" id="tabFlashcardsBtn" onclick="App.switchTool('flashcards')">
+              🗂️ Generate Flashcards
+            </button>
+            <button type="button" class="tool-tab-btn" id="tabQuizBtn" onclick="App.switchTool('quiz')">
+              📝 Generate Quiz
+            </button>
+            <button type="button" class="tool-tab-btn" id="tabSummaryBtn" onclick="App.switchTool('summary')">
+              📄 1-Page Summary
+            </button>
+            <button type="button" class="tool-tab-btn" id="tabMindmapBtn" onclick="App.switchTool('mindmap')">
+              🕸️ Concept Mind Map
+            </button>
+          </div>
+
+          <!-- ================================================================= -->
+          <!-- TOOL PANEL 1: ASK AI (RAG Q&A) -->
+          <!-- ================================================================= -->
+          <div id="panelAsk" class="tool-panel">
+            <div class="tool-panel-header">
+              <h4>💬 Ask AI Question from Textbook (RAG Engine)</h4>
+              <p>Type your independent question to search your document with FAISS and receive cited answers from Gemini 3.6 Flash.</p>
+            </div>
+
+            <!-- Q&A Form -->
+            <div class="qa-input-box">
+              <input 
+                type="text" 
+                id="qaQueryInput" 
+                placeholder="Type your question from the textbook..." 
+                class="qa-text-input"
+                onkeydown="if(event.key === 'Enter') AskAIApp.askQuestion()"
+              >
+              <button type="button" id="btnSubmitQuery" class="btn-action btn-ask" onclick="AskAIApp.askQuestion()">
+                <span id="askBtnText">Ask AI &rarr;</span>
+              </button>
+            </div>
+
+            <!-- Q&A Response Area -->
+            <div class="output-display-area" id="qaOutputArea">
+              <p class="placeholder-text">Type your own question above to search the document and get cited answers.</p>
+            </div>
+          </div>
+
+          <!-- ================================================================= -->
+          <!-- TOOL PANEL 2: FLASHCARDS -->
+          <!-- ================================================================= -->
+          <div id="panelFlashcards" class="tool-panel hidden">
+            <div class="tool-panel-header">
+              <h4>🗂️ Active-Recall Flashcards</h4>
+              <p>Generate study cards with questions on front and cited explanations on back.</p>
+            </div>
+
+            <div class="action-trigger-bar">
+              <button type="button" id="btnRunFlashcards" class="btn-action" onclick="FlashcardsApp.generateFlashcards()">
+                <span id="flashcardsBtnText">Generate 5 Flashcards</span>
+              </button>
+            </div>
+
+            <div class="output-display-area" id="flashcardsOutputArea">
+              <p class="placeholder-text">Click "Generate 5 Flashcards" to create study cards from your active textbook.</p>
+            </div>
+          </div>
+
+          <!-- ================================================================= -->
+          <!-- TOOL PANEL 3: PRACTICE QUIZ -->
+          <!-- ================================================================= -->
+          <div id="panelQuiz" class="tool-panel hidden">
+            <div class="tool-panel-header">
+              <h4>📝 Multiple-Choice Practice Quiz</h4>
+              <p>Generate 4-option practice test questions with instant answer scoring.</p>
+            </div>
+
+            <div class="action-trigger-bar">
+              <button type="button" id="btnRunQuiz" class="btn-action" onclick="QuizApp.generateQuiz()">
+                <span id="quizBtnText">Generate Practice Quiz</span>
+              </button>
+            </div>
+
+            <div class="output-display-area" id="quizOutputArea">
+              <p class="placeholder-text">Click "Generate Practice Quiz" to generate test questions.</p>
+            </div>
+          </div>
+
+          <!-- ================================================================= -->
+          <!-- TOOL PANEL 4: 1-PAGE SUMMARY -->
+          <!-- ================================================================= -->
+          <div id="panelSummary" class="tool-panel hidden">
+            <div class="tool-panel-header">
+              <h4>📄 1-Page Revision Cheat Sheet</h4>
+              <p>Generate executive overview, key takeaways, core definitions, and exam trap warnings.</p>
+            </div>
+
+            <div class="action-trigger-bar">
+              <button type="button" id="btnRunSummary" class="btn-action" onclick="SummaryApp.generateSummary()">
+                Generate 1-Page Summary
+              </button>
+            </div>
+
+            <div class="output-display-area" id="summaryOutputArea">
+              <p class="placeholder-text">Click "Generate 1-Page Summary" to generate revision cheat sheet.</p>
+            </div>
+          </div>
+
+          <!-- ================================================================= -->
+          <!-- TOOL PANEL 5: CONCEPT MIND MAP -->
+          <!-- ================================================================= -->
+          <div id="panelMindmap" class="tool-panel hidden">
+            <div class="tool-panel-header">
+              <h4>🕸️ Visual Concept Mind Map</h4>
+              <p>Generate interactive concept flowchart diagrams linking core topics.</p>
+            </div>
+
+            <div class="action-trigger-bar">
+              <button type="button" id="btnRunMindmap" class="btn-action" onclick="MindmapApp.generateMindmap()">
+                Generate Mind Map
+              </button>
+            </div>
+
+            <div class="output-display-area" id="mindmapOutputArea">
+              <p class="placeholder-text">Click "Generate Mind Map" to generate concept flowchart.</p>
+            </div>
+          </div>
+
+        </div>
+      </main>
+
+    </section>
+
+  </main>
+
+  <!-- Modular Micro-Feature Scripts -->
+  <script src="/js/config.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/documents.js"></script>
+  <script src="/js/qa.js"></script>
+  <script src="/js/flashcards.js"></script>
+  <script src="/js/quiz.js"></script>
+  <script src="/js/summary.js"></script>
+  <script src="/js/mindmap.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

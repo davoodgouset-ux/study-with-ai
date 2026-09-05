@@ -1,0 +1,27 @@
+# Python Virtual Environment
+.venv/
+env/
+venv/
+ENV/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.pytest_cache/
+*.tmp
+
+# Environment & API Secrets (CRITICAL: Never commit API keys or passwords!)
+.env
+.env.local
+*.key
+
+# Runtime Uploads & Generated Vector Indexes
+uploads/*
+!uploads/.gitkeep
+indexes/*
+!indexes/.gitkeep
+
+# Operating System Files
+.DS_Store
+Thumbs.db
