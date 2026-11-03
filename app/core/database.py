@@ -1,4 +1,4 @@
-﻿# ==============================================================================
+# ==============================================================================
 # File: app/core/database.py
 # Purpose: Manages the MySQL database connection using SQLAlchemy.
 # Provides the engine, session factory, and a get_db dependency for FastAPI routes.
@@ -18,6 +18,9 @@ DATABASE_URL = os.getenv(
     "DATABASE_URL",
     "mysql+pymysql://root:root@localhost:3306/study_with_ai"
 )
+if DATABASE_URL.startswith("mysql://"):
+    DATABASE_URL = DATABASE_URL.replace("mysql://", "mysql+pymysql://", 1)
+
 
 # Step 3: Create the SQLAlchemy Engine
 # The engine is the central object that manages connections to the MySQL server.

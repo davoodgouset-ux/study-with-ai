@@ -6,6 +6,7 @@
   <title>Study with AI — Student Workspace</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
@@ -20,6 +21,7 @@
       <div class="brand">
         <span class="brand-icon">🎓</span>
         <span class="brand-title">Study with AI</span>
+        <span class="brand-pill">AI Workspace</span>
       </div>
 
       <!-- User Auth State Navigation -->
@@ -227,6 +229,14 @@
               <button type="button" id="btnSubmitQuery" class="btn-action btn-ask" onclick="AskAIApp.askQuestion()">
                 <span id="askBtnText">Ask AI &rarr;</span>
               </button>
+            </div>
+
+            <!-- Quick Suggestion Chips -->
+            <div class="qa-quick-chips">
+              <span class="chips-label">Quick Prompts:</span>
+              <button type="button" class="quick-chip" onclick="AskAIApp.setQuery('Summarize the core concepts and key takeaways.')">💡 Core Concepts</button>
+              <button type="button" class="quick-chip" onclick="AskAIApp.setQuery('What are the key definitions and formulas?')">📖 Definitions</button>
+              <button type="button" class="quick-chip" onclick="AskAIApp.setQuery('What are common exam pitfalls or tricky questions?')">⚠️ Exam Traps</button>
             </div>
 
             <!-- Q&A Response Area -->

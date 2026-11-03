@@ -3,6 +3,14 @@
  * Ask AI (RAG Q&A Engine) Module
  */
 const AskAIApp = {
+  setQuery(text) {
+    const input = document.getElementById('qaQueryInput');
+    if (input) {
+      input.value = text;
+      input.focus();
+    }
+  },
+
   async askQuestion() {
     const input = document.getElementById('qaQueryInput');
     const query = input.value.trim();
