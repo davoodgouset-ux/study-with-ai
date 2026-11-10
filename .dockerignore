@@ -5,6 +5,7 @@ __pycache__
 .git
 .gitignore
 *.docx
+*.pptx
 scratch/
 test_*.py
 uploads/
